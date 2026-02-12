@@ -57,7 +57,7 @@ public class ServicesUpdate {
 	    v.setModello("Punto");
 
 	    try {
-	        idGenerato = daoV.insert("update.veicoli.insert", v);
+	        idGenerato = daoV.insert("insert.veicolo", v);
 	        System.out.println("Inserimento veicolo OK. ID generato: " + idGenerato);
 
 	    } catch (Exception e) {
@@ -67,10 +67,6 @@ public class ServicesUpdate {
 	    return idGenerato;
 	}
 	
-	
-	
-
-	
 	private void insertMacchina(int idVeicolo) {
 
 	    System.out.println("*********** Insert into Macchine");
@@ -78,10 +74,35 @@ public class ServicesUpdate {
 	    try {
 
 	        Object[] params = new Object[] {
-	            idVeicolo   
+	            idVeicolo,
+	            4,
+	            "EB523RC",
+	            1300	            
 	        };
 
-	        daoM.insert("update.macchine.insert", params);
+	        daoM.insert("insert.macchina", params);
+
+	        System.out.println("Inserimento macchina OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMacchina: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
+	
+
+	
+	private void insertMacchinaParametri(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Macchine");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo
+	        };
+
+	        daoM.insert("insert.macchina.parametri", params);
 
 	        System.out.println("Inserimento macchina OK");
 
@@ -111,7 +132,7 @@ public class ServicesUpdate {
 
 	        int righe;
 			try {
-				righe = daoV.update("update.veicoli.update", vei);
+				righe = daoV.update("update.veicolo", vei);
 		        System.out.println("Righe aggiornate: " + righe);
 
 			} catch (Exception e) {

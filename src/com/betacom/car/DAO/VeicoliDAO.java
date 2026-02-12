@@ -113,7 +113,7 @@ public class VeicoliDAO {
 	public void deleteById(Integer idVeicolo) throws Exception {
 
 	    String query = SQLConfiguration.getInstance()
-	                     .getQuery("delete.veicoli");
+	                     .getQuery("delete.veicolo");
 
 	    Object[] params = new Object[] { idVeicolo };
 
