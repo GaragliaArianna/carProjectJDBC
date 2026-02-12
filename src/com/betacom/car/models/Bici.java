@@ -8,6 +8,11 @@ public class Bici extends Veicoli {
     private String tipoFreno;        // meccanico, a disco, ecc.
     private String tipoSospensione;  // senza, mono, bi, ecc.
     private Boolean piegevole;
+    
+    //per la scrittura su db
+    private Integer idFreno;
+    private Integer idSospensione;
+
 
     // Costruttore
     public Bici(Integer id, String tipoVeicolo, Integer numeroRuote, String alimentazione,
@@ -55,4 +60,40 @@ public class Bici extends Veicoli {
                String.format(" | Marce: %d | Freno: %s | Sospensione: %s | Pieghevole: %s",
                              numeroMarce, tipoFreno, tipoSospensione, piegevole ? "Sì" : "No");
     }
+
+	public Integer getIdFreno() {
+		return idFreno;
+	}
+
+	public void setIdFreno(Integer idFreno) {
+		this.idFreno = idFreno;
+	}
+
+	public Integer getIdSospensione() {
+		return idSospensione;
+	}
+
+	public void setIdSospensione(Integer idSospensione) {
+		this.idSospensione = idSospensione;
+	}
+    
+	public Bici(Integer id, String tipoVeicolo, Integer numeroRuote, String alimentazione,
+            String categoria, String colore, String marca, Integer annoProduzione, String modello,
+            Integer numeroMarce, Integer idFreno, Integer idSospensione, String tipoFreno,
+            String tipoSospensione, Boolean piegevole) {
+			super(id, tipoVeicolo, numeroRuote, alimentazione, categoria, colore, marca, annoProduzione, modello);
+		    this.numeroMarce = numeroMarce;
+		    this.idFreno = idFreno;
+		    this.idSospensione = idSospensione;
+		    this.tipoFreno = tipoFreno;
+		    this.tipoSospensione = tipoSospensione;
+		    this.piegevole = piegevole;
+	}
+
+	public Bici() {
+		super();
+	}
+	
+	
+
 }

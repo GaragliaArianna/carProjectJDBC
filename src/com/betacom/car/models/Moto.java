@@ -74,4 +74,10 @@ public class Moto extends Veicoli {
         return super.toString() +
                String.format(" | Cilindrata: %d | Targa: %s", cilindrata, targa);
     }
+
+	public Moto() {
+		super();
+	}
+    
+    
 }

@@ -45,4 +45,11 @@ public class Macchina extends Veicoli {
         return super.toString() + 
                String.format(" | Porte: %d | Targa: %s | Cilindrata: %d", porte, targa, cilindrata);
     }
+
+	public Macchina() {
+		super();
+	}
+    
+    
 }
+

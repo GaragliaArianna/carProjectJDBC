@@ -18,11 +18,10 @@ public class ServicesUpdate {
 	public void executeUpdate() {
 		
 		try {
-			SQLConfiguration.getInstance().setAutoCommit();  //false perchè devo fare 2 insert collegate
+			
 			int id=insertVeicolo();
 			insertMacchina(id);
-			//updateCliente(id);
-			//delete(id);
+			
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
 		}

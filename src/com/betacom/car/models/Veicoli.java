@@ -180,6 +180,27 @@ public class Veicoli {
 	    );
 	}
 
+	public Veicoli(Integer id, Integer annoProduzione, Integer numeroRuote,
+            Integer idTipoVeicolo, Integer idAlimentazione, Integer idCategoria,
+            Integer idColore, Integer idMarca,
+            String tipoVeicolo, String alimentazione, String categoria,
+            String colore, String marca, String modello) {
+		 this.id = id;
+		 this.annoProduzione = annoProduzione;
+		 this.numeroRuote = numeroRuote;
+		 this.idTipoVeicolo = idTipoVeicolo;
+		 this.idAlimentazione = idAlimentazione;
+		 this.idCategoria = idCategoria;
+		 this.idColore = idColore;
+		 this.idMarca = idMarca;
+		 this.tipoVeicolo = tipoVeicolo;
+		 this.alimentazione = alimentazione;
+		 this.categoria = categoria;
+		 this.colore = colore;
+		 this.marca = marca;
+		 this.modello = modello;
+}
+
 
 
 }
