@@ -10,8 +10,16 @@ public class Marca {
         this.idMarca = idMarca;
         this.marca = marca;
     }
+    
+    
 
-    // Getter e Setter
+    public Marca() {
+		
+	}
+
+
+
+	// Getter e Setter
     public Integer getIdMarca() {
         return idMarca;
     }
