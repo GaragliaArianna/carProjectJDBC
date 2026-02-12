@@ -31,7 +31,7 @@ public class ServicesQuery {
 		getMotoByTarga("XY456ZT"); //GIUSTO
 		
 		
-		
+	
 		
 		   getAllColori();
 		    getColoreById(1);

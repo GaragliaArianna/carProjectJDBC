@@ -35,7 +35,7 @@ public class ColoriDAO {
         if (colori.isEmpty())
             return Optional.empty();
 
-        
+     
         return Optional.of(colori.get(0));
     }
 

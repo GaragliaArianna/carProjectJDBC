@@ -69,5 +69,5 @@ public class SospensioniDAO {
         System.out.println("Sospensione eliminata correttamente. ID: " + idSospensione);
     }
     
-    
+   
 }
