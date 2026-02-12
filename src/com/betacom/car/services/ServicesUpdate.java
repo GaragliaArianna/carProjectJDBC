@@ -3,6 +3,7 @@ package com.betacom.car.services;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Veicoli;
@@ -12,11 +13,12 @@ public class ServicesUpdate {
 
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
+	private MacchineDAO daoM = new MacchineDAO();
 	
 	public void executeUpdate() {
 		
 		try {
-			//SQLConfiguration.getInstance().setAutoCommit(false);  //false perchè devo fare 2 insert collegate
+			SQLConfiguration.getInstance().setAutoCommit();  //false perchè devo fare 2 insert collegate
 			int id=insertVeicolo();
 			insertMacchina(id);
 			//updateCliente(id);
@@ -58,9 +60,26 @@ public class ServicesUpdate {
 	}
 
 	
-	private void insertMacchina (int id) {
-		
+	private void insertMacchina(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Macchine");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo   
+	        };
+
+	        daoM.insert("update.macchine.insert", params);
+
+	        System.out.println("Inserimento macchina OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMacchina: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
 	}
+
 	/*
 	private void updateCliente(int id) {
 		System.out.println("Insert into clienti*********");
