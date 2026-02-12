@@ -32,6 +32,7 @@ public class ServicesQuery {
 		
 		
 		
+		
 		   getAllColori();
 		    getColoreById(1);
 		    

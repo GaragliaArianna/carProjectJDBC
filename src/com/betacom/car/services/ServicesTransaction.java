@@ -111,6 +111,7 @@
 //		List<RapportoCliente> lR=daoR.findAll();
 //		lR.forEach(r -> System.out.println(r));
 //	}
+
 //	
 //	private void generateError() throws Exception {
 //		throw new AcademyException("Error generated...");
