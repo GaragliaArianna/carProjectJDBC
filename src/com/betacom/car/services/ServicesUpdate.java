@@ -5,9 +5,14 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
+import com.betacom.car.DAO.MarcaDAO;
+import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Colore;
+import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -16,7 +21,9 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
-	
+	private ColoriDAO daoC= new ColoriDAO ();
+	private SospensioniDAO daoS = new SospensioniDAO();
+
 	public void executeUpdate() throws AcademyException {
 		
 		try {
@@ -28,6 +35,15 @@ public class ServicesUpdate {
 			
 			updateVeicolo(id);
 			deleteVeicoloById(id);
+
+			 int idColore = insertColore("Blu2");          
+		        updateColore(idColore, "Blu Elettrico2");    
+		        deleteColore(idColore);   
+		        
+		        
+		        int idSosp = insertSospensione("Ammortizzatore Standard");
+		        updateSospensione(idSosp, "Ammortizzatore Sportivo");
+		        deleteSospensione(idSosp);
 
 			
 		} catch (Exception e) {
@@ -140,8 +156,105 @@ public class ServicesUpdate {
 	}
 
 	
+	  public int insertColore(String nomeColore) throws AcademyException {
+	        try {
+	            SQLConfiguration.getInstance().setTransaction();
 
-	
+	            Colore c = new Colore(null, nomeColore); // ID null → DB lo genera
+	            int idGenerato = daoC.insert("update.colori.insert", c);
+
+	            System.out.println("Inserimento colore OK. ID generato: " + idGenerato);
+
+	            SQLConfiguration.getInstance().commit();
+	            return idGenerato;
+
+	        } catch (Exception e) {
+	            System.out.println("Errore insertColore: " + e.getMessage());
+	            SQLConfiguration.getInstance().rollback();
+	            throw new AcademyException(e.getMessage());
+	        }
+	    }
+	  
+	  public void updateColore(int idColore, String nuovoNome) throws AcademyException {
+	        try {
+	            SQLConfiguration.getInstance().setTransaction();
+
+	            Colore c = new Colore(idColore, nuovoNome);
+	            int righe = daoC.update("update.colori.update", c);
+
+	            System.out.println("Righe aggiornate: " + righe);
+
+	            SQLConfiguration.getInstance().commit();
+
+	        } catch (Exception e) {
+	            System.out.println("Errore updateColore: " + e.getMessage());
+	            SQLConfiguration.getInstance().rollback();
+	            throw new AcademyException(e.getMessage());
+	        }
+	  }
+	    
+	  
+	  public void deleteColore(int idColore) throws AcademyException {
+	        try {
+	            SQLConfiguration.getInstance().setTransaction();
+
+	            daoC.deleteById(idColore);
+
+	            System.out.println("Colore eliminato correttamente. ID: " + idColore);
+
+	            SQLConfiguration.getInstance().commit();
+
+	        } catch (Exception e) {
+	            System.out.println("Errore deleteColore: " + e.getMessage());
+	            SQLConfiguration.getInstance().rollback();
+	            throw new AcademyException(e.getMessage());
+	        }
+	           
+	        
+	  }
+	  
+	  public int insertSospensione(String tipo) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        Sospensione s = new Sospensione(null, tipo);
+		        int idGenerato = daoS.insert("update.sospensioni.insert", s);
+		        System.out.println("Inserimento sospensione OK. ID generato: " + idGenerato);
+		        SQLConfiguration.getInstance().commit();
+		        return idGenerato;
+		    } catch (Exception e) {
+		        System.out.println("Errore insertSospensione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+	  
+	  public void updateSospensione(int idSospensione, String nuovoTipo) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        Sospensione s = new Sospensione(idSospensione, nuovoTipo);
+		        int righe = daoS.update("update.sospensioni.update", s);
+		        System.out.println("Righe aggiornate: " + righe);
+		        SQLConfiguration.getInstance().commit();
+		    } catch (Exception e) {
+		        System.out.println("Errore updateSospensione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+	  
+	  public void deleteSospensione(int idSospensione) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        daoS.deleteById(idSospensione);
+		        System.out.println("Sospensione eliminata correttamente. ID: " + idSospensione);
+		        SQLConfiguration.getInstance().commit();
+		    } catch (Exception e) {
+		        System.out.println("Errore deleteSospensione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+
 	/*
 	private void updateCliente(int id) {
 		System.out.println("Insert into clienti*********");

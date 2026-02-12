@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MotoDAO;
+import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Colore;
 import com.betacom.car.models.Moto;
+import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 import com.betacom.car.utils.SQLManager;
@@ -18,12 +22,22 @@ public class ServicesQuery {
 	
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
-	
+	private ColoriDAO daoC= new ColoriDAO ();
+	private SospensioniDAO daoS = new SospensioniDAO();
+
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
 		getVeicoliByTipo(3); //GIUSTO
 		getMotoByTarga("XY456ZT"); //GIUSTO
 		
+		
+		
+		   getAllColori();
+		    getColoreById(1);
+		    
+		    getAllSospensioni();
+		    getSospensioneById(1);
+		    
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
 //		getCount("impiegato");  //count su una query		
@@ -71,9 +85,66 @@ public class ServicesQuery {
 	    }
 	}
 
+	private void getAllColori() {
 
+	    System.out.println("*****getAll Colori******");
+
+	    try {
+	        List<Colore> lC = daoC.findAll();
+	        lC.forEach(c -> System.out.println(c));
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
 	
+	private void getColoreById(Integer idColore) {
 
+	    System.out.println("*****get Colore by ID******");
+
+	    try {
+
+	        Optional<Colore> colore = daoC.findById(idColore);
+
+	        if (colore.isEmpty()) {
+	            System.out.println("Colore non trovato: " + idColore);
+	        } else {
+	            System.out.println(colore.get());
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+	
+	private void getAllSospensioni() {
+	    System.out.println("*****getAll Sospensioni******");
+
+	    try {
+	        List<Sospensione> lS = daoS.findAll();
+	        lS.forEach(s -> System.out.println(s));
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+
+	private void getSospensioneById(Integer idSospensione) {
+	    System.out.println("*****get Sospensione by ID******");
+
+	    try {
+	        Optional<Sospensione> sosp = daoS.findById(idSospensione);
+
+	        if (sosp.isEmpty()) {
+	            System.out.println("Sospensione non trovata: " + idSospensione);
+	        } else {
+	            System.out.println(sosp.get());
+	        }
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
 }
 
 	
