@@ -16,7 +16,6 @@ import com.betacom.car.utils.SQLManager;
 
 public class ServicesQuery {
 	
-	private SQLManager db= new SQLManager();
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
 	

@@ -2,6 +2,7 @@ package com.betacom.car.DAO;
 
 
 import java.sql.Date;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,25 @@ public class VeicoliDAO {
                 .collect(Collectors.toList());
     }
 
-	
+	public int insert( String qryName, Veicoli v ) throws Exception {
+		
+	    Object[] params = new Object[] {
+	            v.getIdTipoVeicolo(),
+	            v.getNumeroRuote(),
+	            v.getIdAlimentazione(),
+	            v.getIdCategoria(),
+	            v.getIdColore(),
+	            v.getIdMarca(),
+	            v.getAnnoProduzione(),
+	            v.getModello()
+	        };
+		
+		 String query= SQLConfiguration.getInstance().getQuery(qryName);
+		 System.out.println(query);
+		 
+		 return db.save(query, params, true);
+		
+	}
 
 
 }

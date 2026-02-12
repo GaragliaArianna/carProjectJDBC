@@ -44,7 +44,9 @@ public class SQLManager {
 	}
 	
 	/*
-	 * table list
+	 * recupero dei metadati
+	 * Recupera tutte le tabelle del database
+	* Ritorna una List<String> con i nomi delle tabelle
 	 */
 	
 	public List<String> listOfTable (String dbName) throws AcademyException{
@@ -70,7 +72,10 @@ public class SQLManager {
 	}
 	
 	/*
-	 * query without parameter
+	 * query select without parameter
+	 * restituisce una riga Map in cui:
+	 * chiave = nome colonna
+	 * valore = valore del campo
 	 */
 	
 	public List<Map<String, Object>>  list(String query) throws AcademyException {
@@ -122,6 +127,8 @@ public class SQLManager {
 	
 	/*
 	 * insert object without primary key
+	 * Esegue INSERT, UPDATE o DELETE 
+	 * Ritorna il numero di righe modificate
 	 */
 	public int save(String query, Object[]params) throws AcademyException {
 		int ret=0;
@@ -141,6 +148,10 @@ public class SQLManager {
 	
 	/*
 	 * save with primary key
+	 * Come sopra
+	 * Ma recupera anche la chiave primaria generata automaticamente
+	 * Usa Statement.RETURN_GENERATED_KEYS
+	 * Restituisce l’id generato
 	 */
 	
 	public int save(String query, Object[]params, boolean pk) throws AcademyException {
@@ -248,23 +259,19 @@ public class SQLManager {
 	}
 	
 	/*
-	 * commit
+	 * commit: conferma la transazione
 	 */
 	public void commit() throws AcademyException, SQLException{
 		SQLConfiguration.getInstance().getConnection().commit();
 	}
 	
 	/*
-	 * rollback
+	 * rollback : annulla la transazione
 	 */
 
 	public void rollback() throws AcademyException, SQLException{
 		SQLConfiguration.getInstance().getConnection().rollback();
 	}
-	
-	
-	
-	
 	
 	
 }

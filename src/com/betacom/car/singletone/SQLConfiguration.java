@@ -1,7 +1,6 @@
 package com.betacom.car.singletone;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,12 +10,22 @@ import java.util.Properties;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.utils.SQLManager;
 
-
+/*
+ * Questa classe SQLConfiguration è un Singleton che gestisce la configurazione del database e la connessione JDBC.
+ * Lavora insieme a SQLManager:
+ * SQLConfiguration → configura e fornisce la connessione
+ * SQLManager → esegue le query
+ */
 
 public class SQLConfiguration {
 
 	private static SQLConfiguration instance=null;
 	
+	/*
+	 * i dati dei 2 file vengono caricati in due oggetti Properties:
+	 * private static Properties prop;
+	 * private static Properties query;
+	 */
 	private static Properties prop=new Properties();
 	private static Properties query=new Properties();
 	
