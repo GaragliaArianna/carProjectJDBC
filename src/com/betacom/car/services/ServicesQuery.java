@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
@@ -18,12 +20,15 @@ public class ServicesQuery {
 	
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
+	private MarcaDAO daoMarca = new MarcaDAO();
+
 	
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
 		getVeicoliByTipo(3); //GIUSTO
 		getMotoByTarga("XY456ZT"); //GIUSTO
-		
+		getAllMarche();
+
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
 //		getCount("impiegato");  //count su una query		
@@ -72,7 +77,23 @@ public class ServicesQuery {
 	}
 
 
+// MARCHE
 	
+    public void getAllMarche() {
+        System.out.println("***** Get All Marche *****");
+        try {
+            List<Marca> marche = daoMarca.findAll();
+            if (marche.isEmpty()) {
+                System.out.println("Nessuna marca trovata.");
+            } else {
+                marche.forEach(m -> System.out.println(m.getIdMarca() + " - " + m.getMarca()));
+            }
+        } catch (AcademyException e) {
+            System.out.println("Error during getAllMarche: " + e.getMessage());
+        }
+    }
+
+
 
 }
 
