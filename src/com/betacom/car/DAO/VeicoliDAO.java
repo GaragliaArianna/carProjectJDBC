@@ -88,6 +88,27 @@ public class VeicoliDAO {
 		 return db.save(query, params, true);
 		
 	}
+	
+	public int update(String qryName, Veicoli v) throws Exception {
+
+	    Object[] params = new Object[] {
+	            v.getIdTipoVeicolo(),
+	            v.getNumeroRuote(),
+	            v.getIdAlimentazione(),
+	            v.getIdCategoria(),
+	            v.getIdColore(),
+	            v.getIdMarca(),
+	            v.getAnnoProduzione(),
+	            v.getModello(),
+	            v.getId()
+	    };
+
+	    String query = SQLConfiguration.getInstance().getQuery(qryName);
+	    System.out.println(query);
+
+	    return db.save(query, params);
+	}
+
 
 
 }

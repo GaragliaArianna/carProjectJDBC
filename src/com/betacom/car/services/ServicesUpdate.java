@@ -1,9 +1,9 @@
 package com.betacom.car.services;
 
+
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
-import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Veicoli;
@@ -13,15 +13,14 @@ public class ServicesUpdate {
 
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
-	private MacchineDAO daoM = new MacchineDAO();
 	
 	public void executeUpdate() {
 		
 		try {
-			
+			//SQLConfiguration.getInstance().setAutoCommit(false);  //false perchè devo fare 2 insert collegate
 			int id=insertVeicolo();
-			insertMacchina(id);
-			
+			updateVeicolo(id);
+			//delete(id);
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
 		}
@@ -29,7 +28,7 @@ public class ServicesUpdate {
 	
 	private int insertVeicolo() {
 
-	    System.out.println("*********** Insert into Veicoli");
+	    System.out.println("*********** Insert into Veicoli ************");
 
 	    int idGenerato = 0;
 
@@ -57,28 +56,48 @@ public class ServicesUpdate {
 
 	    return idGenerato;
 	}
+	
+	
+	
 
 	
-	private void insertMacchina(int idVeicolo) {
-
-	    System.out.println("*********** Insert into Macchine");
-
-	    try {
-
-	        Object[] params = new Object[] {
-	            idVeicolo   
-	        };
-
-	        daoM.insert("update.macchine.insert", params);
-
-	        System.out.println("Inserimento macchina OK");
-
-	    } catch (Exception e) {
-	        System.out.println("Errore insertMacchina: " + e.getMessage());
-	        throw new RuntimeException(e); 
-	    }
+	private void insertMacchina (int id) {
+		
 	}
+	
+	
+	
+	private void updateVeicolo(int id) {
+		System.out.println("Update into clienti*********");
+		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+		Veicoli vei=new Veicoli();
+	     vei.setId(id);
 
+	        // --- NUOVI VALORI ---
+	        vei.setIdTipoVeicolo(1);     // Macchina
+	        vei.setNumeroRuote(4);
+	        vei.setIdAlimentazione(1);   // Benzina
+	        vei.setIdCategoria(2);       // Sportiva
+	        vei.setIdColore(1);          // Rosso
+	        vei.setIdMarca(1);           // Fiat
+	        vei.setAnnoProduzione(2020);
+	        vei.setModello("Punto EVO");
+
+	        int righe;
+			try {
+				righe = daoV.update("update.veicoli.update", vei);
+		        System.out.println("Righe aggiornate: " + righe);
+
+			} catch (Exception e) {
+				
+		        System.out.println("Errore found: " + e.getMessage());
+			}
+
+
+	    } 
+	
+
+	
 	/*
 	private void updateCliente(int id) {
 		System.out.println("Insert into clienti*********");
