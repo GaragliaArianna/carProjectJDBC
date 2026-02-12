@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+<<<<<<< HEAD
 import com.betacom.car.DAO.ColoriDAO;
+=======
+import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.MarcaDAO;
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
@@ -22,13 +27,20 @@ public class ServicesQuery {
 	
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
+<<<<<<< HEAD
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
+=======
+	private MarcaDAO daoMarca = new MarcaDAO();
+
+	
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
 		getVeicoliByTipo(3); //GIUSTO
 		getMotoByTarga("XY456ZT"); //GIUSTO
+<<<<<<< HEAD
 		
 		
 	
@@ -39,6 +51,10 @@ public class ServicesQuery {
 		    getAllSospensioni();
 		    getSospensioneById(1);
 		    
+=======
+		getAllMarche();
+
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
 //		getCount("impiegato");  //count su una query		
@@ -113,6 +129,7 @@ public class ServicesQuery {
 	            System.out.println(colore.get());
 	        }
 
+<<<<<<< HEAD
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
@@ -129,6 +146,25 @@ public class ServicesQuery {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+=======
+// MARCHE
+	
+    public void getAllMarche() {
+        System.out.println("***** Get All Marche *****");
+        try {
+            List<Marca> marche = daoMarca.findAll();
+            if (marche.isEmpty()) {
+                System.out.println("Nessuna marca trovata.");
+            } else {
+                marche.forEach(m -> System.out.println(m.getIdMarca() + " - " + m.getMarca()));
+            }
+        } catch (AcademyException e) {
+            System.out.println("Error during getAllMarche: " + e.getMessage());
+        }
+    }
+
+
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 
 	private void getSospensioneById(Integer idSospensione) {
 	    System.out.println("*****get Sospensione by ID******");

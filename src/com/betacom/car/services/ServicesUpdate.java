@@ -7,11 +7,17 @@ import com.betacom.car.utils.SQLManager;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
+<<<<<<< HEAD
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Sospensione;
+=======
+import com.betacom.car.DAO.VeicoliDAO;
+import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Marca;
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -20,9 +26,16 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
+<<<<<<< HEAD
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
+=======
+	private MarcaDAO daoMarca = new MarcaDAO();
+
+
+	
+>>>>>>> 8f9b6b0 (Marca get insert update (delete))
 	public void executeUpdate() throws AcademyException {
 		
 		try {
@@ -34,6 +47,10 @@ public class ServicesUpdate {
 			
 			updateVeicolo(id);
 			deleteVeicoloById(id);
+			insertMarca("Audi");
+			updateMarca(1, "Ferrari");
+			deleteMarca(2);
+
 
 			 int idColore = insertColore("Blu2");          
 		        updateColore(idColore, "Blu Elettrico2");    
@@ -153,6 +170,34 @@ public class ServicesUpdate {
 		}
 
 	}
+	public void insertMarca(String nomeMarca) {
+        try {
+            Marca m = new Marca(null, nomeMarca); // usa il costruttore con id=null
+            int result = daoMarca.insert(m);
+            System.out.println("Insert completata, righe inserite: " + result);
+        } catch (AcademyException e) {
+            System.out.println("Error during insertMarca: " + e.getMessage());
+        }
+    }
+
+    public void updateMarca(Integer idMarca, String nuovoNome) {
+        try {
+            Marca m = new Marca(idMarca, nuovoNome);
+            int result = daoMarca.update(m);
+            System.out.println("Update completato, righe modificate: " + result);
+        } catch (AcademyException e) {
+            System.out.println("Error during updateMarca: " + e.getMessage());
+        }
+    }
+
+    public void deleteMarca(Integer idMarca) {
+        try {
+            int result = daoMarca.delete(idMarca);
+            System.out.println("Delete completato, righe cancellate: " + result);
+        } catch (AcademyException e) {
+            System.out.println("Error during deleteMarca: " + e.getMessage());
+        }
+    }
 
 	
 	  public int insertColore(String nomeColore) throws AcademyException {
