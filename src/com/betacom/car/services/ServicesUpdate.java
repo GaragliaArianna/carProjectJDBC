@@ -1,9 +1,11 @@
 package com.betacom.car.services;
 
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Veicoli;
@@ -13,16 +15,24 @@ public class ServicesUpdate {
 
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
+	private MacchineDAO daoM = new MacchineDAO();
 	
-	public void executeUpdate() {
+	public void executeUpdate() throws AcademyException {
 		
 		try {
-			//SQLConfiguration.getInstance().setAutoCommit(false);  //false perchè devo fare 2 insert collegate
+			
+			SQLConfiguration.getInstance().setTransaction();
 			int id=insertVeicolo();
+			insertMacchina(id);
+			SQLConfiguration.getInstance().commit();
+			
 			updateVeicolo(id);
-			//delete(id);
+			deleteVeicoloById(id);
+
+			
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
+			SQLConfiguration.getInstance().rollback();
 		}
 	}
 	
@@ -61,14 +71,30 @@ public class ServicesUpdate {
 	
 
 	
-	private void insertMacchina (int id) {
-		
+	private void insertMacchina(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Macchine");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo   
+	        };
+
+	        daoM.insert("update.macchine.insert", params);
+
+	        System.out.println("Inserimento macchina OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMacchina: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
 	}
 	
 	
 	
 	private void updateVeicolo(int id) {
-		System.out.println("Update into clienti*********");
+		System.out.println("Update into Veicoli*********");
 		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
 		Veicoli vei=new Veicoli();
 	     vei.setId(id);
@@ -95,6 +121,24 @@ public class ServicesUpdate {
 
 
 	    } 
+	
+	public void deleteVeicoloById(int id) throws SQLException, AcademyException {
+
+		SQLConfiguration.getInstance().setTransaction();
+
+		try {
+
+		    daoV.deleteById(id);
+
+		    SQLConfiguration.getInstance().commit();
+
+		} catch (Exception e) {
+
+		    SQLConfiguration.getInstance().rollback();
+		}
+
+	}
+
 	
 
 	

@@ -272,6 +272,32 @@ public class SQLManager {
 	public void rollback() throws AcademyException, SQLException{
 		SQLConfiguration.getInstance().getConnection().rollback();
 	}
-	
+
+	/*
+	 * delete with parameters
+	 * Esegue una DELETE
+	 * Restituisce il numero di righe eliminate
+	 */
+	public int delete(String query, Object[] params) throws AcademyException {
+
+	    int ret = 0;
+
+	    try {
+
+	        PreparedStatement cmd =
+	            SQLConfiguration.getInstance().getConnection()
+	            .prepareStatement(query);
+
+	        cmd = createSet(cmd, params);
+
+	        ret = cmd.executeUpdate(); // numero righe eliminate
+
+	    } catch (Exception e) {
+	        throw new AcademyException(e.getMessage());
+	    }
+
+	    return ret;
+	}
+
 	
 }

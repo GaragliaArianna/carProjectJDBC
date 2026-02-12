@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Moto;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
@@ -107,6 +108,26 @@ public class VeicoliDAO {
 	    System.out.println(query);
 
 	    return db.save(query, params);
+	}
+
+	public void deleteById(Integer idVeicolo) throws Exception {
+
+	    String query = SQLConfiguration.getInstance()
+	                     .getQuery("delete.veicoli");
+
+	    Object[] params = new Object[] { idVeicolo };
+
+	    System.out.println(query);
+
+	    int rows = db.delete(query, params);
+
+	    if (rows == 0) {
+	        throw new AcademyException(
+	            "Nessun veicolo trovato con id: " + idVeicolo
+	        );
+	    }
+
+	    System.out.println("Veicolo eliminato correttamente. ID: " + idVeicolo);
 	}
 
 

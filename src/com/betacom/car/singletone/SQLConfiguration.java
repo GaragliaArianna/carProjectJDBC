@@ -83,6 +83,23 @@ public class SQLConfiguration {
 		con.setAutoCommit(false);
 	}
 	
+	public void commit () throws AcademyException {
+		try {
+			con.commit();		
+		
+		} catch (SQLException e ) {
+			throw new AcademyException(e.getMessage());
+		}
+	}
+	
+	public void rollback() throws AcademyException {
+		try {
+			con.rollback();
+		} catch (SQLException e) {
+			throw new AcademyException (e.getMessage());
+		}
+	}
+	
 	/*
 	 * chiusura connessione
 	 */
