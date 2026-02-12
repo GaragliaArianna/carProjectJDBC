@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
 import com.betacom.car.DAO.MacchineDAO;
+import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Veicoli;
@@ -16,18 +17,25 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
+	private MotoDAO daoMO = new MotoDAO();
 	
 	public void executeUpdate() throws AcademyException {
 		
 		try {
 			
 			SQLConfiguration.getInstance().setTransaction();
-			int id=insertVeicolo();
-			insertMacchina(id);
+			
+			int id/*=insertVeicolo()*/;
+			//insertMacchina(id);
+			id = insertVeicolo();
+			insertBici(id);
+			
+			
+			
 			SQLConfiguration.getInstance().commit();
 			
-			updateVeicolo(id);
-			deleteVeicoloById(id);
+			//updateVeicolo(id);
+			//deleteVeicoloById(id);
 
 			
 		} catch (Exception e) {
@@ -46,15 +54,15 @@ public class ServicesUpdate {
 
 	    // ID relazioni
 	    v.setIdTipoVeicolo(1);     // 1 = Macchina
-	    v.setNumeroRuote(4);
-	    v.setIdAlimentazione(2);   // esempio Diesel
-	    v.setIdCategoria(3);
-	    v.setIdColore(2);
-	    v.setIdMarca(1);
+	    v.setNumeroRuote(2);
+	    v.setIdAlimentazione(3);   // esempio Diesel
+	    v.setIdCategoria(5);
+	    v.setIdColore(3);
+	    v.setIdMarca(6);
 
 	    // dati comuni
-	    v.setAnnoProduzione(2010);
-	    v.setModello("Punto");
+	    v.setAnnoProduzione(2015);
+	    v.setModello("BiciCitta1");
 
 	    try {
 	        idGenerato = daoV.insert("update.veicoli.insert", v);
@@ -91,7 +99,50 @@ public class ServicesUpdate {
 	    }
 	}
 	
+	private void insertMoto(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Moto");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo,
+	            "ZZ98765",
+	            1000
+	        };
+
+	        daoMO.insert("insert.moto", params);
+
+	        System.out.println("Inserimento moto OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMoto: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
 	
+	private void insertBici(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Biciclette");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo,
+	            6,	//num marce
+	            1,	//id freno fk
+	            2	//id sospensione fk
+	        };
+
+	        daoMO.insert("insert.bici", params);
+
+	        System.out.println("Inserimento moto OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMoto: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
 	
 	private void updateVeicolo(int id) {
 		System.out.println("Update into Veicoli*********");
