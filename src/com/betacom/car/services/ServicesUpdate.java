@@ -1,14 +1,27 @@
 package com.betacom.car.services;
 
 import java.sql.SQLException;
+
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+
 import com.betacom.car.DAO.AlimentazioniDAO;
 import com.betacom.car.DAO.CategoriaDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
+
+import com.betacom.car.DAO.BicicletteDAO;
+import com.betacom.car.DAO.ColoriDAO;
+import com.betacom.car.DAO.MacchineDAO;
+import com.betacom.car.DAO.MarcaDAO;
+import com.betacom.car.DAO.VeicoliDAO;
+import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Marca;
+
+import com.betacom.car.DAO.MotoDAO;
+
 
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
@@ -16,12 +29,14 @@ import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Alimentazione;
 import com.betacom.car.models.Categoria;
 import com.betacom.car.models.Colore;
+import com.betacom.car.models.Macchina;
 import com.betacom.car.models.Sospensione;
 
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Marca;
 
+import com.betacom.car.models.Moto;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -31,8 +46,13 @@ public class ServicesUpdate {
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
 
+	private BicicletteDAO daoB = new BicicletteDAO();
+	private MotoDAO daoMO = new MotoDAO();
+
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
+
 
 	private MarcaDAO daoMarca = new MarcaDAO();
 
@@ -51,6 +71,7 @@ public class ServicesUpdate {
 			
 			updateVeicolo(id);
 			deleteVeicoloById(id);
+
 			insertMarca("Audi");
 			updateMarca(1, "Multipla");
 			deleteMarca(2);
@@ -73,8 +94,14 @@ public class ServicesUpdate {
 		        updateCategoria(idCat, "Crossover Compatto");
 		        deleteCategoria(idCat);
 
-		        
-		        
+		
+		      
+		     updateMacchina(1);
+		     updateMoto(2);
+		     
+		     SQLConfiguration.getInstance().setAutoCommit();
+			
+
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
 			SQLConfiguration.getInstance().rollback();
@@ -102,7 +129,7 @@ public class ServicesUpdate {
 	    v.setModello("Punto");
 
 	    try {
-	        idGenerato = daoV.insert("update.veicoli.insert", v);
+	        idGenerato = daoV.insert("insert.veicolo", v);
 	        System.out.println("Inserimento veicolo OK. ID generato: " + idGenerato);
 
 	    } catch (Exception e) {
@@ -112,21 +139,44 @@ public class ServicesUpdate {
 	    return idGenerato;
 	}
 	
-	
+	private void insertMacchina(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Macchine");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo,
+	            4,
+	            "EB523RC",
+	            1300	            
+	        };
+
+	        daoM.insert("insert.macchina", params);
+
+	        System.out.println("Inserimento macchina OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMacchina: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
 	
 
 	
-	private void insertMacchina(int idVeicolo) {
+
+	private void insertMacchinaSenzaParametri(int idVeicolo) {
+
 
 	    System.out.println("***** Insert into Macchine");
 
 	    try {
 
 	        Object[] params = new Object[] {
-	            idVeicolo   
+	            idVeicolo
 	        };
 
-	        daoM.insert("update.macchine.insert", params);
+	        daoM.insert("insert.macchina.parametri", params);
 
 	        System.out.println("Inserimento macchina OK");
 
@@ -156,7 +206,7 @@ public class ServicesUpdate {
 
 	        int righe;
 			try {
-				righe = daoV.update("update.veicoli.update", vei);
+				righe = daoV.update("update.veicolo", vei);
 		        System.out.println("Righe aggiornate: " + righe);
 
 			} catch (Exception e) {
@@ -218,7 +268,7 @@ public class ServicesUpdate {
 	            SQLConfiguration.getInstance().setTransaction();
 
 	            Colore c = new Colore(null, nomeColore); // ID null → DB lo genera
-	            int idGenerato = daoC.insert("update.colori.insert", c);
+	            int idGenerato = daoC.insert("insert.colore", c);
 
 	            System.out.println("Inserimento colore OK. ID generato: " + idGenerato);
 
@@ -237,7 +287,7 @@ public class ServicesUpdate {
 	            SQLConfiguration.getInstance().setTransaction();
 
 	            Colore c = new Colore(idColore, nuovoNome);
-	            int righe = daoC.update("update.colori.update", c);
+	            int righe = daoC.update("update.colore", c);
 
 	            System.out.println("Righe aggiornate: " + righe);
 
@@ -274,7 +324,7 @@ public class ServicesUpdate {
 		    try {
 		        SQLConfiguration.getInstance().setTransaction();
 		        Sospensione s = new Sospensione(null, tipo);
-		        int idGenerato = daoS.insert("update.sospensioni.insert", s);
+		        int idGenerato = daoS.insert("insert.sospensione", s);
 		        System.out.println("Inserimento sospensione OK. ID generato: " + idGenerato);
 		        SQLConfiguration.getInstance().commit();
 		        return idGenerato;
@@ -289,7 +339,7 @@ public class ServicesUpdate {
 		    try {
 		        SQLConfiguration.getInstance().setTransaction();
 		        Sospensione s = new Sospensione(idSospensione, nuovoTipo);
-		        int righe = daoS.update("update.sospensioni.update", s);
+		        int righe = daoS.update("update.sospensione", s);
 		        System.out.println("Righe aggiornate: " + righe);
 		        SQLConfiguration.getInstance().commit();
 		    } catch (Exception e) {
@@ -312,10 +362,10 @@ public class ServicesUpdate {
 		    }
 		}
 	  
+
 	  public int insertAlimentazione(String tipo) throws AcademyException {
 		    try {
 		        SQLConfiguration.getInstance().setTransaction();
-
 		        Alimentazione a = new Alimentazione(null, tipo);
 		        int idGenerato = daoA.insert("update.alimentazioni.insert", a);
 
@@ -330,6 +380,94 @@ public class ServicesUpdate {
 		        throw new AcademyException(e.getMessage());
 		    }
 		}
+
+	  private void insertMoto(int idVeicolo) {
+
+		    System.out.println("***** Insert into Moto");
+
+		    try {
+
+		        Object[] params = new Object[] {
+		            idVeicolo,
+		            "ZZ98765",
+		            1000
+		        };
+
+		        daoMO.insert("insert.moto", params);
+
+		        System.out.println("Inserimento moto OK");
+
+		    } catch (Exception e) {
+		        System.out.println("Errore insertMoto: " + e.getMessage());
+		        throw new RuntimeException(e); 
+		    }
+		}
+		
+		private void insertBici(int idVeicolo) {
+
+		    System.out.println("***** Insert into Biciclette");
+
+		    try {
+
+		        Object[] params = new Object[] {
+		            idVeicolo,
+		            6,	//num marce
+		            1,	//id freno fk
+		            2	//id sospensione fk
+		        };
+
+		        daoB.insert("insert.bici", params);
+
+		        System.out.println("Inserimento moto OK");
+
+		    } catch (Exception e) {
+		        System.out.println("Errore insertMoto: " + e.getMessage());
+		        throw new RuntimeException(e); 
+		    }
+		}
+		
+
+		
+		private void updateMacchina(int id) {
+			System.out.println("Update into Macchina*********");
+			//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+			Macchina m=new Macchina();
+			m.setId(id);
+		    m.setPorte(6);
+		    m.setCilindrata(1600);
+
+		        int righe;
+				try {
+					righe = daoM.update("update.macchina", m);
+			        System.out.println("Righe aggiornate: " + righe);
+
+				} catch (Exception e) {
+					
+			        System.out.println("Errore found: " + e.getMessage());
+				}
+
+		} 
+		
+		private void updateMoto(int id) {
+			System.out.println("Update into Moto*********");
+			//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+			Moto m=new Moto();
+			m.setId(id);
+		    m.setCilindrata(1600);
+
+		        int righe;
+				try {
+					righe = daoMO.update("update.moto", m);
+			        System.out.println("Righe aggiornate: " + righe);
+
+				} catch (Exception e) {
+					
+			        System.out.println("Errore found: " + e.getMessage());
+				}
+
+		}
+
+
 
 	  public void updateAlimentazione(int id, String nuovoTipo) throws AcademyException {
 		    try {

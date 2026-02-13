@@ -6,9 +6,26 @@ import java.util.Optional;
 
 import com.betacom.car.models.Alimentazione;
 import com.betacom.car.models.Categoria;
+
+import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.MarcaDAO;
+
+import com.betacom.car.DAO.ColoriDAO;
+
+import com.betacom.car.DAO.ColoriDAO;
+import com.betacom.car.DAO.MacchineDAO;
+import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.MarcaDAO;
+
+import com.betacom.car.DAO.MotoDAO;
+import com.betacom.car.DAO.SospensioniDAO;
+import com.betacom.car.DAO.VeicoliDAO;
+import com.betacom.car.exception.AcademyException;
+
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Marca;
 import com.betacom.car.models.Moto;
+import com.betacom.car.models.Macchina;
 import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
@@ -30,10 +47,12 @@ public class ServicesQuery {
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
 
+	private MarcaDAO daoMarca = new MarcaDAO();
+
+	private MacchineDAO daoMA= new MacchineDAO ();
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
-
-	private MarcaDAO daoMarca = new MarcaDAO();
 
 	private AlimentazioniDAO daoA = new AlimentazioniDAO();
 	private CategoriaDAO daoCat = new CategoriaDAO();
@@ -57,9 +76,10 @@ public class ServicesQuery {
 		getAllCategorie();
 		getCategoriaById(2);
 
-//		getDipendentiWithParameters("impiegato", 1);
-//		getDipendenteById(1);  //optional
-//		getCount("impiegato");  //count su una query		
+		
+		getMacchinaByTarga("AB123CD");
+		    
+
 	}
 
 	
@@ -135,6 +155,8 @@ public class ServicesQuery {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+
+// MARCHE
 	
 	private void getAllSospensioni() {
 	    System.out.println("*****getAll Sospensioni******");
@@ -143,11 +165,12 @@ public class ServicesQuery {
 	        List<Sospensione> lS = daoS.findAll();
 	        lS.forEach(s -> System.out.println(s));
 
+
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
-// MARCHE
+
 	
     public void getAllMarche() {
         System.out.println("***** Get All Marche *****");
@@ -162,6 +185,7 @@ public class ServicesQuery {
             System.out.println("Error during getAllMarche: " + e.getMessage());
         }
     }
+
 
 
 
@@ -228,6 +252,22 @@ public class ServicesQuery {
 	            System.out.println("Categoria non trovata: " + idCategoria);
 	        } else {
 	            System.out.println(cat.get());
+	            
+	        } } catch(Exception e) {
+	        	//poi capiamo
+	        } }
+	  
+	            
+
+	private void getMacchinaByTarga(String targa) {
+	    System.out.println("*****get macchina by targa");
+	    try {
+	        Optional<Macchina> macchina = daoMA.findMacchinaByTarga(new Object[]{targa});
+	        if (macchina.isEmpty()) {
+	            System.out.println("Macchina non trovata: " + targa);
+	        } else {
+	            System.out.println(macchina.get());
+
 	        }
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
