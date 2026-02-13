@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 import com.betacom.car.models.Marca;
 import com.betacom.car.DAO.MarcaDAO;
 
 import com.betacom.car.DAO.ColoriDAO;
+
+import com.betacom.car.DAO.ColoriDAO;
+import com.betacom.car.DAO.MacchineDAO;
+import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.MarcaDAO;
 
 import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.SospensioniDAO;
@@ -16,6 +20,7 @@ import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Moto;
+import com.betacom.car.models.Macchina;
 import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
@@ -27,29 +32,31 @@ public class ServicesQuery {
 	
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
-
 	private MarcaDAO daoMarca = new MarcaDAO();
+
+	private MacchineDAO daoMA= new MacchineDAO ();
+
 
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
 
+
+
 	public void executeQuery() throws AcademyException {
-		getAllVeicoli();   //GIUSTO
-		getVeicoliByTipo(3); //GIUSTO
-		getMotoByTarga("XY456ZT"); //GIUSTO
-
-		getAllMarche();
-
+		getAllVeicoli();  
+		getVeicoliByTipo(3); 
+		getMotoByTarga("XY456ZT");
+		
 		getAllColori();
 		getColoreById(1);
 		    
 		getAllSospensioni();
 		getSospensioneById(1);
-		   
-//		getDipendentiWithParameters("impiegato", 1);
-//		getDipendenteById(1);  //optional
-//		getCount("impiegato");  //count su una query		
+		
+		getMacchinaByTarga("AB123CD");
+		    
+	
 	}
 
 	
@@ -120,10 +127,15 @@ public class ServicesQuery {
 	        } else {
 	            System.out.println(colore.get());
 	        }
+
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+
+
+
+
 
 // MARCHE
 	
@@ -151,10 +163,12 @@ public class ServicesQuery {
 	        List<Sospensione> lS = daoS.findAll();
 	        lS.forEach(s -> System.out.println(s));
 
+
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+
 
 	private void getSospensioneById(Integer idSospensione) {
 	    System.out.println("*****get Sospensione by ID******");
@@ -168,6 +182,20 @@ public class ServicesQuery {
 	            System.out.println(sosp.get());
 	        }
 
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+	
+	private void getMacchinaByTarga(String targa) {
+	    System.out.println("*****get macchina by targa");
+	    try {
+	        Optional<Macchina> macchina = daoMA.findMacchinaByTarga(new Object[]{targa});
+	        if (macchina.isEmpty()) {
+	            System.out.println("Macchina non trovata: " + targa);
+	        } else {
+	            System.out.println(macchina.get());
+	        }
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }

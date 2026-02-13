@@ -5,19 +5,27 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.BicicletteDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
-
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Marca;
+
+import com.betacom.car.DAO.MotoDAO;
 
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Colore;
+import com.betacom.car.models.Macchina;
 import com.betacom.car.models.Sospensione;
+
+import com.betacom.car.DAO.VeicoliDAO;
+import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Marca;
+import com.betacom.car.models.Moto;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -26,11 +34,16 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
-
-	private MarcaDAO daoMarca = new MarcaDAO();
+	private BicicletteDAO daoB = new BicicletteDAO();
+	private MotoDAO daoMO = new MotoDAO();
 
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
+
+
+	private MarcaDAO daoMarca = new MarcaDAO();
+
+
 
 
 	public void executeUpdate() throws AcademyException {
@@ -44,20 +57,25 @@ public class ServicesUpdate {
 			
 			updateVeicolo(id);
 			deleteVeicoloById(id);
+			
 			insertMarca("Audi");
 			updateMarca(1, "Ferrari");
 			deleteMarca(2);
 
 
 			 int idColore = insertColore("Blu2");          
-		        updateColore(idColore, "Blu Elettrico2");    
-		        deleteColore(idColore);   
+		     updateColore(idColore, "Blu Elettrico2");    
+		     deleteColore(idColore);   
 		        
 		        
-		        int idSosp = insertSospensione("Ammortizzatore Standard");
-		        updateSospensione(idSosp, "Ammortizzatore Sportivo");
-		        deleteSospensione(idSosp);
+		     int idSosp = insertSospensione("Ammortizzatore Standard");
+		     updateSospensione(idSosp, "Ammortizzatore Sportivo");
+		     deleteSospensione(idSosp);
 
+		     updateMacchina(1);
+		     updateMoto(2);
+		     
+		     SQLConfiguration.getInstance().setAutoCommit();
 			
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
@@ -121,7 +139,9 @@ public class ServicesUpdate {
 	
 
 	
-	private void insertMacchinaParametri(int idVeicolo) {
+
+	private void insertMacchinaSenzaParametri(int idVeicolo) {
+
 
 	    System.out.println("*********** Insert into Macchine");
 
@@ -315,6 +335,92 @@ public class ServicesUpdate {
 		        SQLConfiguration.getInstance().rollback();
 		        throw new AcademyException(e.getMessage());
 		    }
+		}
+	  
+	  private void insertMoto(int idVeicolo) {
+
+		    System.out.println("***** Insert into Moto");
+
+		    try {
+
+		        Object[] params = new Object[] {
+		            idVeicolo,
+		            "ZZ98765",
+		            1000
+		        };
+
+		        daoMO.insert("insert.moto", params);
+
+		        System.out.println("Inserimento moto OK");
+
+		    } catch (Exception e) {
+		        System.out.println("Errore insertMoto: " + e.getMessage());
+		        throw new RuntimeException(e); 
+		    }
+		}
+		
+		private void insertBici(int idVeicolo) {
+
+		    System.out.println("***** Insert into Biciclette");
+
+		    try {
+
+		        Object[] params = new Object[] {
+		            idVeicolo,
+		            6,	//num marce
+		            1,	//id freno fk
+		            2	//id sospensione fk
+		        };
+
+		        daoB.insert("insert.bici", params);
+
+		        System.out.println("Inserimento moto OK");
+
+		    } catch (Exception e) {
+		        System.out.println("Errore insertMoto: " + e.getMessage());
+		        throw new RuntimeException(e); 
+		    }
+		}
+		
+
+		
+		private void updateMacchina(int id) {
+			System.out.println("Update into Macchina*********");
+			//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+			Macchina m=new Macchina();
+			m.setId(id);
+		    m.setPorte(6);
+		    m.setCilindrata(1600);
+
+		        int righe;
+				try {
+					righe = daoM.update("update.macchina", m);
+			        System.out.println("Righe aggiornate: " + righe);
+
+				} catch (Exception e) {
+					
+			        System.out.println("Errore found: " + e.getMessage());
+				}
+
+		} 
+		
+		private void updateMoto(int id) {
+			System.out.println("Update into Moto*********");
+			//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+			Moto m=new Moto();
+			m.setId(id);
+		    m.setCilindrata(1600);
+
+		        int righe;
+				try {
+					righe = daoMO.update("update.moto", m);
+			        System.out.println("Righe aggiornate: " + righe);
+
+				} catch (Exception e) {
+					
+			        System.out.println("Errore found: " + e.getMessage());
+				}
+
 		}
 
 	/*
