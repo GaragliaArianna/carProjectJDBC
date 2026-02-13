@@ -4,20 +4,21 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.BicicletteDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
-<<<<<<< HEAD
+import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Bici;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Sospensione;
-=======
+
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Marca;
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -26,25 +27,30 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
-<<<<<<< HEAD
+	private MotoDAO daoMO = new MotoDAO();
+	private BicicletteDAO daoB = new BicicletteDAO();
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
-=======
+
 	private MarcaDAO daoMarca = new MarcaDAO();
 
 
 	
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
+
 	public void executeUpdate() throws AcademyException {
 		
 		try {
 			
-			SQLConfiguration.getInstance().setTransaction();
+			SQLConfiguration.getInstance().setTransaction();/*
 			int id=insertVeicolo();
-			insertMacchina(id);
-			SQLConfiguration.getInstance().commit();
+			insertMacchina(id);*/
+			//deleteBiciById(4);
+			updateBici(2);
 			
+			SQLConfiguration.getInstance().commit();
+			/*
 			updateVeicolo(id);
 			deleteVeicoloById(id);
 			insertMarca("Audi");
@@ -60,7 +66,7 @@ public class ServicesUpdate {
 		        int idSosp = insertSospensione("Ammortizzatore Standard");
 		        updateSospensione(idSosp, "Ammortizzatore Sportivo");
 		        deleteSospensione(idSosp);
-
+*/
 			
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
@@ -123,6 +129,51 @@ public class ServicesUpdate {
 	    }
 	}
 	
+	private void insertMoto(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Moto");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo,
+	            "ZZ98765",
+	            1000
+	        };
+
+	        daoMO.insert("insert.moto", params);
+
+	        System.out.println("Inserimento moto OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMoto: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
+	
+	private void insertBici(int idVeicolo) {
+
+	    System.out.println("*********** Insert into Biciclette");
+
+	    try {
+
+	        Object[] params = new Object[] {
+	            idVeicolo,
+	            6,	//num marce
+	            1,	//id freno fk
+	            2	//id sospensione fk
+	        };
+
+	        daoB.insert("insert.bici", params);
+
+	        System.out.println("Inserimento moto OK");
+
+	    } catch (Exception e) {
+	        System.out.println("Errore insertMoto: " + e.getMessage());
+	        throw new RuntimeException(e); 
+	    }
+	}
+	
 	
 	
 	private void updateVeicolo(int id) {
@@ -154,6 +205,34 @@ public class ServicesUpdate {
 
 	    } 
 	
+	private void updateBici(int id) {
+		System.out.println("Update into Biciclette*********");
+		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+		Bici bi=new Bici();
+		bi.setId(id);
+
+	        // --- NUOVI VALORI ---
+	       
+	        bi.setNumeroMarce(7);
+	        bi.setIdFreno(2);
+	        bi.setIdSospensione(3);
+	        
+
+	        int righe;
+	        
+			try {
+				righe = daoB.update("update.bici.update", bi);
+		        System.out.println("Righe aggiornate: " + righe);
+
+			} catch (Exception e) {
+				
+		        System.out.println("Errore found: " + e.getMessage());
+			}
+
+
+	    }
+	
+	
 	public void deleteVeicoloById(int id) throws SQLException, AcademyException {
 
 		SQLConfiguration.getInstance().setTransaction();
@@ -170,6 +249,24 @@ public class ServicesUpdate {
 		}
 
 	}
+	
+	public void deleteBiciById(int id)  throws SQLException, AcademyException {
+
+		SQLConfiguration.getInstance().setTransaction();
+
+		try {
+
+		    daoB.deleteById(id);
+
+		    SQLConfiguration.getInstance().commit();
+
+		} catch (Exception e) {
+
+		    SQLConfiguration.getInstance().rollback();
+		}
+
+	}
+	
 	public void insertMarca(String nomeMarca) {
         try {
             Marca m = new Marca(null, nomeMarca); // usa il costruttore con id=null

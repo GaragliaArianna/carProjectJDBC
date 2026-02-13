@@ -109,6 +109,8 @@ public class VeicoliDAO {
 
 	    return db.save(query, params);
 	}
+	
+
 
 	public void deleteById(Integer idVeicolo) throws Exception {
 
