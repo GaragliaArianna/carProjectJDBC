@@ -11,7 +11,7 @@ import com.betacom.car.models.Marca;
 import com.betacom.car.DAO.MarcaDAO;
 
 import com.betacom.car.DAO.ColoriDAO;
-
+import com.betacom.car.DAO.FreniDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.models.Marca;
@@ -23,6 +23,7 @@ import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 
 import com.betacom.car.models.Colore;
+import com.betacom.car.models.Freno;
 import com.betacom.car.models.Marca;
 import com.betacom.car.models.Moto;
 import com.betacom.car.models.Macchina;
@@ -56,6 +57,10 @@ public class ServicesQuery {
 
 	private AlimentazioniDAO daoA = new AlimentazioniDAO();
 	private CategoriaDAO daoCat = new CategoriaDAO();
+	private FreniDAO daoFreno = new FreniDAO(); 
+
+
+   
 
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
@@ -78,6 +83,8 @@ public class ServicesQuery {
 
 		
 		getMacchinaByTarga("AB123CD");
+		
+		 getAllFreni();
 		    
 
 	}
@@ -273,6 +280,22 @@ public class ServicesQuery {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+	
+
+
+public void getAllFreni() {
+    System.out.println(" Get All Freni ");
+    try {
+        List<Freno> freni = daoFreno.findAll();
+        if (freni.isEmpty()) {
+            System.out.println("Nessun freno trovato.");
+        } else {
+            freni.forEach(f -> System.out.println(f.getIdFreno() + " - " + f.getFreno()));
+        }
+    } catch (AcademyException e) {
+        System.out.println("Error during getAllFreni: " + e.getMessage());
+    }
+}
 }
 
 	

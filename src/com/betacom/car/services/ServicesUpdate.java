@@ -9,6 +9,7 @@ import com.betacom.car.utils.SQLManager;
 import com.betacom.car.DAO.AlimentazioniDAO;
 import com.betacom.car.DAO.CategoriaDAO;
 import com.betacom.car.DAO.ColoriDAO;
+import com.betacom.car.DAO.FreniDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
 
@@ -27,8 +28,10 @@ import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Alimentazione;
+import com.betacom.car.models.Bici;
 import com.betacom.car.models.Categoria;
 import com.betacom.car.models.Colore;
+import com.betacom.car.models.Freno;
 import com.betacom.car.models.Macchina;
 import com.betacom.car.models.Sospensione;
 
@@ -50,6 +53,7 @@ public class ServicesUpdate {
 	private MotoDAO daoMO = new MotoDAO();
 
 
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
@@ -58,6 +62,9 @@ public class ServicesUpdate {
 
 	private AlimentazioniDAO daoA = new AlimentazioniDAO();
 	private CategoriaDAO daoCat = new CategoriaDAO();
+	private FreniDAO daoFreno = new FreniDAO();
+
+
 
 
 	public void executeUpdate() throws AcademyException {
@@ -100,6 +107,20 @@ public class ServicesUpdate {
 		     updateMoto(2);
 		     
 		     SQLConfiguration.getInstance().setAutoCommit();
+		     
+		     insertFreno("Flintstone");
+		     updateFreno(2, "FrenoNuovo");
+		     deleteFreno(1);
+		     
+		     /*
+		     SQLConfiguration.getInstance().setTransaction();
+		     int idBici = insertVeicolo();
+	         insertBici(idBici);
+	         SQLConfiguration.getInstance().commit();
+	            
+		     updateBici(idBici);
+		     deleteBiciById(idBici);*/
+	         
 			
 
 		} catch (Exception e) {
@@ -148,7 +169,7 @@ public class ServicesUpdate {
 	        Object[] params = new Object[] {
 	            idVeicolo,
 	            4,
-	            "EB523RC",
+	            "EB523EC",
 	            1300	            
 	        };
 
@@ -403,29 +424,7 @@ public class ServicesUpdate {
 		    }
 		}
 		
-		private void insertBici(int idVeicolo) {
 
-		    System.out.println("***** Insert into Biciclette");
-
-		    try {
-
-		        Object[] params = new Object[] {
-		            idVeicolo,
-		            6,	//num marce
-		            1,	//id freno fk
-		            2	//id sospensione fk
-		        };
-
-		        daoB.insert("insert.bici", params);
-
-		        System.out.println("Inserimento moto OK");
-
-		    } catch (Exception e) {
-		        System.out.println("Errore insertMoto: " + e.getMessage());
-		        throw new RuntimeException(e); 
-		    }
-		}
-		
 
 		
 		private void updateMacchina(int id) {
@@ -546,5 +545,83 @@ public class ServicesUpdate {
 		    }
 		}
 	  
-	  
+
+
+public Integer insertFreno(String tipo) {
+    try {
+        Freno f = new Freno(null, tipo);
+        int idGenerato = daoFreno.insert(f);
+
+        System.out.println("Insert Freno completata, ID generato: " + idGenerato);
+        return idGenerato;
+
+    } catch (AcademyException e) {
+        System.out.println("Error during insertFreno: " + e.getMessage());
+        return null;
+    }
+}
+
+
+public void updateFreno(Integer id, String nuovoTipo) {
+    try {
+        Freno f = new Freno(id, nuovoTipo);
+        int result = daoFreno.update(f);
+        System.out.println("Update Freno completato, righe modificate: " + result);
+    } catch (AcademyException e) {
+        System.out.println("Error during updateFreno: " + e.getMessage());
+    }
+}
+
+public void deleteFreno(Integer id) {
+    try {
+        int result = daoFreno.delete(id);
+        System.out.println("Delete Freno completato, righe cancellate: " + result);
+    } catch (AcademyException e) {
+        System.out.println("Error during deleteFreno: " + e.getMessage());
+    }
+}
+
+private void insertBici(int idVeicolo) {
+    System.out.println("*** Insert into Biciclette");
+    try {
+        Object[] params = new Object[] {
+        		idVeicolo,
+            6,    //num marce
+            1,    //id freno fk
+            2    //id sospensione fk
+            
+        };
+        daoB.insert("insert.bici", params);
+        System.out.println("Inserimento bici OK");
+    } catch (Exception e) {
+        System.out.println("Errore insertBici: " + e.getMessage());
+        throw new RuntimeException(e); 
+    }
+}
+private void updateBici(int id) {
+    System.out.println("Update into Biciclette*");
+    //se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
+    Bici bi=new Bici();
+    bi.setId(id);
+        // --- NUOVI VALORI --
+        bi.setNumeroMarce(7);
+        bi.setIdFreno(2);
+        bi.setIdSospensione(3);
+        int righe;
+        try {
+            righe = daoB.update("update.bici", bi);
+            System.out.println("Righe aggiornate: " + righe);
+        } catch (Exception e) {
+            System.out.println("Errore found: " + e.getMessage());
+        }
+}
+public void deleteBiciById(int id)  throws SQLException, AcademyException {
+    SQLConfiguration.getInstance().setTransaction();
+    try {
+        daoB.deleteById(id);
+        SQLConfiguration.getInstance().commit();
+    } catch (Exception e) {
+        SQLConfiguration.getInstance().rollback();
+    }
+}
 }
