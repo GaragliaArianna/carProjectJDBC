@@ -4,20 +4,22 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.AlimentazioniDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
-<<<<<<< HEAD
+
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Alimentazione;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Sospensione;
-=======
+
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Marca;
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
+
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
@@ -26,16 +28,15 @@ public class ServicesUpdate {
 	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
-<<<<<<< HEAD
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
-=======
 	private MarcaDAO daoMarca = new MarcaDAO();
 
+	private AlimentazioniDAO daoA = new AlimentazioniDAO();
 
-	
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
+
 	public void executeUpdate() throws AcademyException {
 		
 		try {
@@ -48,7 +49,7 @@ public class ServicesUpdate {
 			updateVeicolo(id);
 			deleteVeicoloById(id);
 			insertMarca("Audi");
-			updateMarca(1, "Ferrari");
+			updateMarca(1, "Multipla");
 			deleteMarca(2);
 
 
@@ -61,7 +62,13 @@ public class ServicesUpdate {
 		        updateSospensione(idSosp, "Ammortizzatore Sportivo");
 		        deleteSospensione(idSosp);
 
-			
+		        int idAlim = insertAlimentazione("Ibrida");
+
+		        updateAlimentazione(idAlim, "Ibrida Plug-in");
+
+		        deleteAlimentazione(idAlim);
+		        
+		        
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
 			SQLConfiguration.getInstance().rollback();
@@ -70,7 +77,7 @@ public class ServicesUpdate {
 	
 	private int insertVeicolo() {
 
-	    System.out.println("*********** Insert into Veicoli ************");
+	    System.out.println("**** Insert into Veicoli *****");
 
 	    int idGenerato = 0;
 
@@ -105,7 +112,7 @@ public class ServicesUpdate {
 	
 	private void insertMacchina(int idVeicolo) {
 
-	    System.out.println("*********** Insert into Macchine");
+	    System.out.println("***** Insert into Macchine");
 
 	    try {
 
@@ -126,7 +133,7 @@ public class ServicesUpdate {
 	
 	
 	private void updateVeicolo(int id) {
-		System.out.println("Update into Veicoli*********");
+		System.out.println("Update into Veicoli*****");
 		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
 		Veicoli vei=new Veicoli();
 	     vei.setId(id);
@@ -298,51 +305,57 @@ public class ServicesUpdate {
 		        throw new AcademyException(e.getMessage());
 		    }
 		}
+	  
+	  public int insertAlimentazione(String tipo) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
 
-	/*
-	private void updateCliente(int id) {
-		System.out.println("Insert into clienti*********");
-		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
-		Clienti cli=new Clienti();
-		cli.setId_cliente(id);
-		cli.setIndirizzo("Indirizzo modificato");
-		cli.setTelefono("modificato");
-		cli.setpIva("mfniefjieato");
-		
-		try {
-			dao.update(cli);
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
-		}
-	}*/
-	
-	/*
-	private void updateCliente(int id) {
-		System.out.println("Insert into clienti*********");
-		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
-		Clienti cli=new Clienti();
-		cli.setId_cliente(id);
-		cli.setIndirizzo("Indirizzo modificato");
+		        Alimentazione a = new Alimentazione(null, tipo);
+		        int idGenerato = daoA.insert("update.alimentazioni.insert", a);
 
-		
-		try {
-			System.out.println("numero di righe modificate: "+dao.update(cli));
-			Optional <Clienti> row=dao.findById(id);
-			if(row.isPresent()) {
-				System.out.println(row.get());
-			}
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
+		        System.out.println("Inserimento alimentazione OK. ID generato: " + idGenerato);
+
+		        SQLConfiguration.getInstance().commit();
+		        return idGenerato;
+
+		    } catch (Exception e) {
+		        System.out.println("Errore insertAlimentazione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
 		}
-	}
-	
-	private void delete(int id) {
-		System.out.println("delete cliente **********"+id);
-		
-		try {
-			System.out.println("Numero di righe cancellate "+ dao.delete(id));
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
+
+	  public void updateAlimentazione(int id, String nuovoTipo) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+
+		        Alimentazione a = new Alimentazione(id, nuovoTipo);
+		        int righe = daoA.update("update.alimentazioni.update", a);
+
+		        System.out.println("Righe aggiornate: " + righe);
+
+		        SQLConfiguration.getInstance().commit();
+
+		    } catch (Exception e) {
+		        System.out.println("Errore updateAlimentazione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
 		}
-	}*/
+
+	  public void deleteAlimentazione(int id) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+
+		        daoA.deleteById(id);
+
+		        SQLConfiguration.getInstance().commit();
+
+		    } catch (Exception e) {
+		        System.out.println("Errore deleteAlimentazione: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+
 }

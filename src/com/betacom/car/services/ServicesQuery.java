@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-<<<<<<< HEAD
-import com.betacom.car.DAO.ColoriDAO;
-=======
-import com.betacom.car.models.Marca;
-import com.betacom.car.DAO.MarcaDAO;
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
-import com.betacom.car.DAO.MotoDAO;
-import com.betacom.car.DAO.SospensioniDAO;
-import com.betacom.car.DAO.VeicoliDAO;
-import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Alimentazione;
 import com.betacom.car.models.Colore;
+import com.betacom.car.models.Marca;
 import com.betacom.car.models.Moto;
 import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
-import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.AlimentazioniDAO;
+import com.betacom.car.DAO.ColoriDAO;
+import com.betacom.car.DAO.MarcaDAO;
+import com.betacom.car.DAO.MotoDAO;
+import com.betacom.car.DAO.SospensioniDAO;
+import com.betacom.car.DAO.VeicoliDAO;
+import com.betacom.car.exception.AcademyException;
+
+
 //import com.betacom.dao.DipendentiDAO;
 //import com.betacom.models.Dipendenti;
 
@@ -27,34 +27,30 @@ public class ServicesQuery {
 	
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
-<<<<<<< HEAD
+
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
 
-=======
 	private MarcaDAO daoMarca = new MarcaDAO();
 
-	
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
+	private AlimentazioniDAO daoA = new AlimentazioniDAO();
+
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
 		getVeicoliByTipo(3); //GIUSTO
 		getMotoByTarga("XY456ZT"); //GIUSTO
-<<<<<<< HEAD
 		
-		
-	
-		
-		   getAllColori();
-		    getColoreById(1);
-		    
-		    getAllSospensioni();
-		    getSospensioneById(1);
-		    
-=======
+		getAllColori();
+		getColoreById(1);
+
+		getAllSospensioni();
+		getSospensioneById(1);
+
 		getAllMarche();
 
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
+		getAllAlimentazioni();
+		getAlimentazioneById(2);
+
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
 //		getCount("impiegato");  //count su una query		
@@ -129,7 +125,6 @@ public class ServicesQuery {
 	            System.out.println(colore.get());
 	        }
 
-<<<<<<< HEAD
 	    } catch (Exception e) {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
@@ -146,7 +141,6 @@ public class ServicesQuery {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
-=======
 // MARCHE
 	
     public void getAllMarche() {
@@ -164,7 +158,6 @@ public class ServicesQuery {
     }
 
 
->>>>>>> 8f9b6b0 (Marca get insert update (delete))
 
 	private void getSospensioneById(Integer idSospensione) {
 	    System.out.println("*****get Sospensione by ID******");
@@ -182,6 +175,36 @@ public class ServicesQuery {
 	        System.out.println("Error found: " + e.getMessage());
 	    }
 	}
+	
+	private void getAllAlimentazioni() {
+	    System.out.println("*****getAll Alimentazioni******");
+
+	    try {
+	        List<Alimentazione> list = daoA.findAll();
+	        list.forEach(a -> System.out.println(a));
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+
+	private void getAlimentazioneById(Integer id) {
+	    System.out.println("*****get Alimentazione by ID******");
+
+	    try {
+	        Optional<Alimentazione> a = daoA.findById(id);
+
+	        if (a.isEmpty())
+	            System.out.println("Alimentazione non trovata: " + id);
+	        else
+	            System.out.println(a.get());
+
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+
+	
 }
 
 	
