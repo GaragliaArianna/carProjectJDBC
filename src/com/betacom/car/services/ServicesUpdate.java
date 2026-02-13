@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
 import com.betacom.car.DAO.AlimentazioniDAO;
+import com.betacom.car.DAO.CategoriaDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
@@ -13,6 +14,7 @@ import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
 import com.betacom.car.models.Alimentazione;
+import com.betacom.car.models.Categoria;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Sospensione;
 
@@ -35,6 +37,7 @@ public class ServicesUpdate {
 	private MarcaDAO daoMarca = new MarcaDAO();
 
 	private AlimentazioniDAO daoA = new AlimentazioniDAO();
+	private CategoriaDAO daoCat = new CategoriaDAO();
 
 
 	public void executeUpdate() throws AcademyException {
@@ -53,8 +56,8 @@ public class ServicesUpdate {
 			deleteMarca(2);
 
 
-			 int idColore = insertColore("Blu2");          
-		        updateColore(idColore, "Blu Elettrico2");    
+			 int idColore = insertColore("Blu");          
+		        updateColore(idColore, "Blu Elettrico");    
 		        deleteColore(idColore);   
 		        
 		        
@@ -63,10 +66,13 @@ public class ServicesUpdate {
 		        deleteSospensione(idSosp);
 
 		        int idAlim = insertAlimentazione("Ibrida");
-
 		        updateAlimentazione(idAlim, "Ibrida Plug-in");
-
 		        deleteAlimentazione(idAlim);
+		       
+		        int idCat = insertCategoria("Crossover");
+		        updateCategoria(idCat, "Crossover Compatto");
+		        deleteCategoria(idCat);
+
 		        
 		        
 		} catch (Exception e) {
@@ -358,4 +364,49 @@ public class ServicesUpdate {
 		    }
 		}
 
+	  public int insertCategoria(String nomeCategoria) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        Categoria c = new Categoria(null, nomeCategoria);
+		        int idGenerato = daoCat.insert("update.categorie.insert", c);
+		        System.out.println("Inserimento categoria OK. ID generato: " + idGenerato);
+		        
+		        SQLConfiguration.getInstance().commit();
+		        return idGenerato;
+		    } catch (Exception e) {
+		        System.out.println("Errore insertCategoria: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+
+		public void updateCategoria(int idCategoria, String nuovoNome) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        Categoria c = new Categoria(idCategoria, nuovoNome);
+		        int righe = daoCat.update("update.categorie.update", c);
+		        System.out.println("Righe aggiornate: " + righe);
+		        
+		        SQLConfiguration.getInstance().commit();
+		    } catch (Exception e) {
+		        System.out.println("Errore updateCategoria: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+
+		public void deleteCategoria(int idCategoria) throws AcademyException {
+		    try {
+		        SQLConfiguration.getInstance().setTransaction();
+		        daoCat.deleteById(idCategoria);
+		        
+		        SQLConfiguration.getInstance().commit();
+		    } catch (Exception e) {
+		        System.out.println("Errore deleteCategoria: " + e.getMessage());
+		        SQLConfiguration.getInstance().rollback();
+		        throw new AcademyException(e.getMessage());
+		    }
+		}
+	  
+	  
 }

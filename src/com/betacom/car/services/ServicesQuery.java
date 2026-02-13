@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.betacom.car.models.Alimentazione;
+import com.betacom.car.models.Categoria;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Marca;
 import com.betacom.car.models.Moto;
@@ -12,6 +13,7 @@ import com.betacom.car.models.Sospensione;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 import com.betacom.car.DAO.AlimentazioniDAO;
+import com.betacom.car.DAO.CategoriaDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.MotoDAO;
@@ -34,6 +36,7 @@ public class ServicesQuery {
 	private MarcaDAO daoMarca = new MarcaDAO();
 
 	private AlimentazioniDAO daoA = new AlimentazioniDAO();
+	private CategoriaDAO daoCat = new CategoriaDAO();
 
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
@@ -50,6 +53,9 @@ public class ServicesQuery {
 
 		getAllAlimentazioni();
 		getAlimentazioneById(2);
+		
+		getAllCategorie();
+		getCategoriaById(2);
 
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
@@ -204,7 +210,29 @@ public class ServicesQuery {
 	    }
 	}
 
-	
+	private void getAllCategorie() {
+	    System.out.println("**getAll Categorie***");
+	    try {
+	        List<Categoria> lC = daoCat.findAll();
+	        lC.forEach(c -> System.out.println(c));
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
+
+	private void getCategoriaById(Integer idCategoria) {
+	    System.out.println("**get Categoria by ID***");
+	    try {
+	        Optional<Categoria> cat = daoCat.findById(idCategoria);
+	        if (cat.isEmpty()) {
+	            System.out.println("Categoria non trovata: " + idCategoria);
+	        } else {
+	            System.out.println(cat.get());
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Error found: " + e.getMessage());
+	    }
+	}
 }
 
 	
