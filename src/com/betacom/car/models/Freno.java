@@ -11,7 +11,13 @@ public class Freno {
         this.freno = freno;
     }
 
-    // Getter e Setter
+    
+    public Freno() {
+
+	}
+
+
+	// Getter e Setter
     public Integer getIdFreno() {
         return idFreno;
     }

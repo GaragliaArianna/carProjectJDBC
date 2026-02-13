@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.betacom.car.models.Freno;
 import com.betacom.car.models.Marca;
+import com.betacom.car.DAO.FreniDAO;
 import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.MotoDAO;
 import com.betacom.car.DAO.VeicoliDAO;
@@ -21,13 +23,14 @@ public class ServicesQuery {
 	private VeicoliDAO daoV= new VeicoliDAO ();
 	private MotoDAO daoM= new MotoDAO ();
 	private MarcaDAO daoMarca = new MarcaDAO();
-
+	private FreniDAO daoFreno = new FreniDAO();
 	
 	public void executeQuery() throws AcademyException {
 		getAllVeicoli();   //GIUSTO
 		getVeicoliByTipo(3); //GIUSTO
 		getMotoByTarga("XY456ZT"); //GIUSTO
 		getAllMarche();
+		getAllFreni();
 
 //		getDipendentiWithParameters("impiegato", 1);
 //		getDipendenteById(1);  //optional
@@ -94,6 +97,19 @@ public class ServicesQuery {
     }
 
 
+    public void getAllFreni() {
+        System.out.println("***** Get All Freni *****");
+        try {
+            List<Freno> freni = daoFreno.findAll();
+            if (freni.isEmpty()) {
+                System.out.println("Nessun freno trovato.");
+            } else {
+                freni.forEach(f -> System.out.println(f.getIdFreno() + " - " + f.getFreno()));
+            }
+        } catch (AcademyException e) {
+            System.out.println("Error during getAllFreni: " + e.getMessage());
+        }
+    }
 
 }
 

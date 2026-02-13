@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import com.betacom.car.utils.SQLManager;
+import com.betacom.car.DAO.FreniDAO;
 import com.betacom.car.DAO.MacchineDAO;
 import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
+import com.betacom.car.models.Freno;
 import com.betacom.car.models.Marca;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
@@ -19,6 +21,7 @@ public class ServicesUpdate {
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
 	private MarcaDAO daoMarca = new MarcaDAO();
+	private FreniDAO daoFreno = new FreniDAO();
 
 
 	
@@ -28,15 +31,16 @@ public class ServicesUpdate {
 			
 			SQLConfiguration.getInstance().setTransaction();
 			int id=insertVeicolo();
-			insertMacchina(id);
-			SQLConfiguration.getInstance().commit();
-			
+			//insertMacchina(id);
 			updateVeicolo(id);
 			deleteVeicoloById(id);
-			insertMarca("Audi");
-			updateMarca(1, "Ferrari");
+			insertMarca("BMW");
+			updateMarca(1, "Mercedes");
 			deleteMarca(2);
-
+			insertFreno("Flintstone");
+			updateFreno(2, "FrenoNuovo");
+			deleteFreno(1);
+			SQLConfiguration.getInstance().commit();
 
 			
 		} catch (Exception e) {
@@ -176,7 +180,39 @@ public class ServicesUpdate {
         }
     }
 
-	
+    public Integer insertFreno(String tipo) {
+        try {
+            Freno f = new Freno(null, tipo);
+            int idGenerato = daoFreno.insert(f);
+
+            System.out.println("Insert Freno completata, ID generato: " + idGenerato);
+            return idGenerato;
+
+        } catch (AcademyException e) {
+            System.out.println("Error during insertFreno: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    public void updateFreno(Integer id, String nuovoTipo) {
+        try {
+            Freno f = new Freno(id, nuovoTipo);
+            int result = daoFreno.update(f);
+            System.out.println("Update Freno completato, righe modificate: " + result);
+        } catch (AcademyException e) {
+            System.out.println("Error during updateFreno: " + e.getMessage());
+        }
+    }
+
+    public void deleteFreno(Integer id) {
+        try {
+            int result = daoFreno.delete(id);
+            System.out.println("Delete Freno completato, righe cancellate: " + result);
+        } catch (AcademyException e) {
+            System.out.println("Error during deleteFreno: " + e.getMessage());
+        }
+    }
 
 	
 	/*
