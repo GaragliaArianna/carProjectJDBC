@@ -1,14 +1,11 @@
 package com.betacom.car.services;
 
 import java.sql.SQLException;
-import java.util.Optional;
-
-import com.betacom.car.utils.SQLManager;
 import com.betacom.car.DAO.BicicletteDAO;
 import com.betacom.car.DAO.ColoriDAO;
 import com.betacom.car.DAO.MacchineDAO;
-import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.MotoDAO;
+import com.betacom.car.DAO.MarcaDAO;
 import com.betacom.car.DAO.SospensioniDAO;
 import com.betacom.car.DAO.VeicoliDAO;
 import com.betacom.car.exception.AcademyException;
@@ -16,58 +13,47 @@ import com.betacom.car.models.Bici;
 import com.betacom.car.models.Colore;
 import com.betacom.car.models.Sospensione;
 
-import com.betacom.car.DAO.VeicoliDAO;
-import com.betacom.car.exception.AcademyException;
+
 import com.betacom.car.models.Marca;
 import com.betacom.car.models.Veicoli;
 import com.betacom.car.singletone.SQLConfiguration;
 
 public class ServicesUpdate {
-
-	
 	private VeicoliDAO daoV=new VeicoliDAO();
 	private MacchineDAO daoM = new MacchineDAO();
 	private MotoDAO daoMO = new MotoDAO();
 	private BicicletteDAO daoB = new BicicletteDAO();
-
 	private ColoriDAO daoC= new ColoriDAO ();
 	private SospensioniDAO daoS = new SospensioniDAO();
-
-
 	private MarcaDAO daoMarca = new MarcaDAO();
 
-
-	
-
 	public void executeUpdate() throws AcademyException {
-		
 		try {
+/*
+			SQLConfiguration.getInstance().setTransaction();
 			
-			SQLConfiguration.getInstance().setTransaction();/*
 			int id=insertVeicolo();
-			insertMacchina(id);*/
-			//deleteBiciById(4);
-			updateBici(2);
-			
+			insertMacchina(id);
+			deleteBiciById(4);
+			updateBici(2);*/
+			int idBici = insertVeicolo();
+			insertBici(idBici);/*
 			SQLConfiguration.getInstance().commit();
-			/*
+			
+			
 			updateVeicolo(id);
 			deleteVeicoloById(id);
-			insertMarca("Audi");
-			updateMarca(1, "Ferrari");
-			deleteMarca(2);
 
 
-			 int idColore = insertColore("Blu2");          
-		        updateColore(idColore, "Blu Elettrico2");    
-		        deleteColore(idColore);   
+			int idColore = insertColore("Blu2");          
+		    updateColore(idColore, "Blu Elettrico2");    
+		    deleteColore(idColore);   
 		        
 		        
-		        int idSosp = insertSospensione("Ammortizzatore Standard");
-		        updateSospensione(idSosp, "Ammortizzatore Sportivo");
-		        deleteSospensione(idSosp);
+		    int idSosp = insertSospensione("Ammortizzatore Standard");
+			updateSospensione(idSosp, "Ammortizzatore Sportivo");
+			deleteSospensione(idSosp);
 */
-			
 		} catch (Exception e) {
 			System.out.println("Errore found: "+e.getMessage());
 			SQLConfiguration.getInstance().rollback();
@@ -75,54 +61,36 @@ public class ServicesUpdate {
 	}
 	
 	private int insertVeicolo() {
-
 	    System.out.println("*********** Insert into Veicoli ************");
-
 	    int idGenerato = 0;
-
 	    Veicoli v = new Veicoli();
-
 	    // ID relazioni
 	    v.setIdTipoVeicolo(1);     // 1 = Macchina
-	    v.setNumeroRuote(4);
-	    v.setIdAlimentazione(2);   // esempio Diesel
-	    v.setIdCategoria(3);
-	    v.setIdColore(2);
-	    v.setIdMarca(1);
-
+	    v.setNumeroRuote(2);
+	    v.setIdAlimentazione(3);   // esempio Diesel
+	    v.setIdCategoria(5);
+	    v.setIdColore(3);
+	    v.setIdMarca(6);
 	    // dati comuni
-	    v.setAnnoProduzione(2010);
-	    v.setModello("Punto");
-
+	    v.setAnnoProduzione(2015);
+	    v.setModello("BiciCitta1");
 	    try {
 	        idGenerato = daoV.insert("update.veicoli.insert", v);
 	        System.out.println("Inserimento veicolo OK. ID generato: " + idGenerato);
-
 	    } catch (Exception e) {
 	        System.out.println("Errore found: " + e.getMessage());
 	    }
-
 	    return idGenerato;
 	}
 	
-	
-	
-
-	
 	private void insertMacchina(int idVeicolo) {
-
 	    System.out.println("*********** Insert into Macchine");
-
 	    try {
-
 	        Object[] params = new Object[] {
 	            idVeicolo   
 	        };
-
 	        daoM.insert("update.macchine.insert", params);
-
 	        System.out.println("Inserimento macchina OK");
-
 	    } catch (Exception e) {
 	        System.out.println("Errore insertMacchina: " + e.getMessage());
 	        throw new RuntimeException(e); 
@@ -130,58 +98,43 @@ public class ServicesUpdate {
 	}
 	
 	private void insertMoto(int idVeicolo) {
-
 	    System.out.println("*********** Insert into Moto");
-
 	    try {
-
 	        Object[] params = new Object[] {
 	            idVeicolo,
 	            "ZZ98765",
 	            1000
 	        };
-
 	        daoMO.insert("insert.moto", params);
-
 	        System.out.println("Inserimento moto OK");
-
 	    } catch (Exception e) {
 	        System.out.println("Errore insertMoto: " + e.getMessage());
 	        throw new RuntimeException(e); 
 	    }
 	}
-	
+
 	private void insertBici(int idVeicolo) {
-
 	    System.out.println("*********** Insert into Biciclette");
-
 	    try {
-
 	        Object[] params = new Object[] {
 	            idVeicolo,
 	            6,	//num marce
 	            1,	//id freno fk
 	            2	//id sospensione fk
 	        };
-
-	        daoB.insert("insert.bici", params);
-
-	        System.out.println("Inserimento moto OK");
-
+	        daoMO.insert("insert.bici", params);
+	        System.out.println("Inserimento bici OK");
 	    } catch (Exception e) {
-	        System.out.println("Errore insertMoto: " + e.getMessage());
+	        System.out.println("Errore insertBici: " + e.getMessage());
 	        throw new RuntimeException(e); 
 	    }
 	}
-	
-	
 	
 	private void updateVeicolo(int id) {
 		System.out.println("Update into Veicoli*********");
 		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
 		Veicoli vei=new Veicoli();
 	     vei.setId(id);
-
 	        // --- NUOVI VALORI ---
 	        vei.setIdTipoVeicolo(1);     // Macchina
 	        vei.setNumeroRuote(4);
@@ -191,80 +144,52 @@ public class ServicesUpdate {
 	        vei.setIdMarca(1);           // Fiat
 	        vei.setAnnoProduzione(2020);
 	        vei.setModello("Punto EVO");
-
 	        int righe;
 			try {
 				righe = daoV.update("update.veicoli.update", vei);
 		        System.out.println("Righe aggiornate: " + righe);
-
 			} catch (Exception e) {
-				
 		        System.out.println("Errore found: " + e.getMessage());
 			}
-
-
-	    } 
+	 } 
 	
 	private void updateBici(int id) {
 		System.out.println("Update into Biciclette*********");
 		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
 		Bici bi=new Bici();
 		bi.setId(id);
-
-	        // --- NUOVI VALORI ---
-	       
+	        // --- NUOVI VALORI --
 	        bi.setNumeroMarce(7);
 	        bi.setIdFreno(2);
 	        bi.setIdSospensione(3);
-	        
-
 	        int righe;
-	        
 			try {
 				righe = daoB.update("update.bici.update", bi);
 		        System.out.println("Righe aggiornate: " + righe);
-
 			} catch (Exception e) {
-				
 		        System.out.println("Errore found: " + e.getMessage());
 			}
-
-
-	    }
+	}
 	
 	
 	public void deleteVeicoloById(int id) throws SQLException, AcademyException {
-
 		SQLConfiguration.getInstance().setTransaction();
-
 		try {
-
 		    daoV.deleteById(id);
-
 		    SQLConfiguration.getInstance().commit();
-
 		} catch (Exception e) {
-
 		    SQLConfiguration.getInstance().rollback();
 		}
-
 	}
 	
 	public void deleteBiciById(int id)  throws SQLException, AcademyException {
-
 		SQLConfiguration.getInstance().setTransaction();
-
 		try {
-
 		    daoB.deleteById(id);
-
 		    SQLConfiguration.getInstance().commit();
-
 		} catch (Exception e) {
-
 		    SQLConfiguration.getInstance().rollback();
 		}
-
 	}
 	
 	public void insertMarca(String nomeMarca) {
@@ -300,15 +225,11 @@ public class ServicesUpdate {
 	  public int insertColore(String nomeColore) throws AcademyException {
 	        try {
 	            SQLConfiguration.getInstance().setTransaction();
-
 	            Colore c = new Colore(null, nomeColore); // ID null → DB lo genera
 	            int idGenerato = daoC.insert("update.colori.insert", c);
-
 	            System.out.println("Inserimento colore OK. ID generato: " + idGenerato);
-
 	            SQLConfiguration.getInstance().commit();
 	            return idGenerato;
-
 	        } catch (Exception e) {
 	            System.out.println("Errore insertColore: " + e.getMessage());
 	            SQLConfiguration.getInstance().rollback();
@@ -319,14 +240,10 @@ public class ServicesUpdate {
 	  public void updateColore(int idColore, String nuovoNome) throws AcademyException {
 	        try {
 	            SQLConfiguration.getInstance().setTransaction();
-
 	            Colore c = new Colore(idColore, nuovoNome);
 	            int righe = daoC.update("update.colori.update", c);
-
 	            System.out.println("Righe aggiornate: " + righe);
-
 	            SQLConfiguration.getInstance().commit();
-
 	        } catch (Exception e) {
 	            System.out.println("Errore updateColore: " + e.getMessage());
 	            SQLConfiguration.getInstance().rollback();
@@ -338,20 +255,14 @@ public class ServicesUpdate {
 	  public void deleteColore(int idColore) throws AcademyException {
 	        try {
 	            SQLConfiguration.getInstance().setTransaction();
-
 	            daoC.deleteById(idColore);
-
 	            System.out.println("Colore eliminato correttamente. ID: " + idColore);
-
 	            SQLConfiguration.getInstance().commit();
-
 	        } catch (Exception e) {
 	            System.out.println("Errore deleteColore: " + e.getMessage());
 	            SQLConfiguration.getInstance().rollback();
 	            throw new AcademyException(e.getMessage());
-	        }
-	           
-	        
+	        }  
 	  }
 	  
 	  public int insertSospensione(String tipo) throws AcademyException {
@@ -395,51 +306,4 @@ public class ServicesUpdate {
 		        throw new AcademyException(e.getMessage());
 		    }
 		}
-
-	/*
-	private void updateCliente(int id) {
-		System.out.println("Insert into clienti*********");
-		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
-		Clienti cli=new Clienti();
-		cli.setId_cliente(id);
-		cli.setIndirizzo("Indirizzo modificato");
-		cli.setTelefono("modificato");
-		cli.setpIva("mfniefjieato");
-		
-		try {
-			dao.update(cli);
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
-		}
-	}*/
-	
-	/*
-	private void updateCliente(int id) {
-		System.out.println("Insert into clienti*********");
-		//se voglio modificare tutti i campi, altrimenti metto nei commenti i campi da non modificare
-		Clienti cli=new Clienti();
-		cli.setId_cliente(id);
-		cli.setIndirizzo("Indirizzo modificato");
-
-		
-		try {
-			System.out.println("numero di righe modificate: "+dao.update(cli));
-			Optional <Clienti> row=dao.findById(id);
-			if(row.isPresent()) {
-				System.out.println(row.get());
-			}
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
-		}
-	}
-	
-	private void delete(int id) {
-		System.out.println("delete cliente **********"+id);
-		
-		try {
-			System.out.println("Numero di righe cancellate "+ dao.delete(id));
-		} catch (Exception e) {
-			System.out.println("Errore found: "+e.getMessage());
-		}
-	}*/
 }

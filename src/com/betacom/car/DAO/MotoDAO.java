@@ -41,7 +41,7 @@ public class MotoDAO {
 	    return Optional.of(moto);
 	}
 	
-	
+
 	public int insert(String qryName, Object[] params) throws Exception {
 
 	    String query = SQLConfiguration.getInstance().getQuery(qryName);
